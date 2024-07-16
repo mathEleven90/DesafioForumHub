@@ -1,0 +1,42 @@
+create table curso (
+    id bigserial primary key,
+    nome varchar(100) not null,
+    categoria varchar(100) not null
+);
+
+create table perfil (
+    id bigserial primary key,
+    nome varchar(100) not null
+);
+
+create table usuario (
+    id bigserial primary key,
+    nome varchar(100) not null,
+    email varchar(100) not null unique,
+    senha varchar(100) not null,
+    perfil_id bigint not null,
+    constraint fk_usuario_perfil_id foreign key(perfil_id) references perfil(id)
+);
+
+create table topico (
+    id bigserial primary key,
+    titulo varchar(100) not null,
+    mensagem varchar(255) not null,
+    data_criacao timestamp not null default current_timestamp,
+    status varchar(100) not null,
+    autor_id bigint not null,
+    curso_id bigint not null,
+    constraint fk_topico_autor_id foreign key(autor_id) references usuario(id),
+    constraint fk_topico_curso_id foreign key(curso_id) references curso(id)
+);
+
+create table resposta (
+    id bigserial primary key,
+    mensagem varchar(255) not null,
+    topico_id bigint not null,
+    data_criacao timestamp not null default current_timestamp,
+    autor_id bigint not null,
+    solucao boolean not null,
+    constraint fk_resposta_topico_id foreign key(topico_id) references topico(id),
+    constraint fk_resposta_autor_id foreign key(autor_id) references usuario(id)
+);
